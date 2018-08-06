@@ -53,7 +53,7 @@ class Timetable {
         int queryByDate(const char* d);
         TimetableEvent queryResult(int index);
         int merge();
-        TimetableEvent getByUID(const char* id);
+        TimetableEvent getByUID(unsigned long uid);
         void addEvent(const char* event);
     
         void validate();

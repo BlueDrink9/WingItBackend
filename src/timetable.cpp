@@ -2,6 +2,7 @@
    @author W. Warren - 2017
    */
 #include "timetable.hpp"
+#include <cstdio>
 
 /* Set initial vector size.
  * 20 is a rough peak for number of classes in a week. */
@@ -34,7 +35,7 @@ void Timetable::reset() {
 }
 
 std::string Timetable::parseEvents(std::string jumbledData) {
-    reset();
+//    reset();
     Parser parser;
     std::vector<TimetableEvent> events = parser.parse(jumbledData);
     addMultiple(events);
@@ -61,8 +62,11 @@ void Timetable::addMultiple(std::vector<TimetableEvent> events) {
 }
 
 void Timetable::addMultiple(std::vector<TimetableEvent> events, bool custom) {
-    for (TimetableEvent event : events) { 
-        this->eventList.push_back(event);
+    for (TimetableEvent event : events) {
+        // Checking if event is already in the store.
+        if(getByUID(event.getUID()).getUID() == 0xCC){
+            this->eventList.push_back(event);
+        }
     }
 }
 
@@ -170,9 +174,7 @@ TimetableEvent Timetable::queryResult(int index) {
     return queryStore[index]; 
 }
 
-TimetableEvent Timetable::getByUID(const char* id) {
-    char* pEnd;
-    unsigned long uid = strtoul(id,&pEnd,10);
+TimetableEvent Timetable::getByUID(unsigned long uid) {
     for (TimetableEvent event : eventList) {
         if (event.getUID() == uid) {
             return event;
