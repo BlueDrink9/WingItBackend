@@ -7,9 +7,9 @@
 /* Set initial vector size.
  * 20 is a rough peak for number of classes in a week. */
 
-std::vector<TimetableEvent> eventList(40);
-std::vector<TimetableEvent> customList(40);
-std::vector<TimetableEvent> queryStore(40);
+std::vector<TimetableEvent> eventList;
+std::vector<TimetableEvent> customList;
+std::vector<TimetableEvent> queryStore;
 
 Timetable::Timetable(std::string dataBasePath) {
     reset();
@@ -28,6 +28,12 @@ void Timetable::restore(std::string dpath) {
     addMultiple(events);
 }
 
+void Timetable::clear() {
+    reset();
+    std::remove(dataPath.c_str());
+    std::remove(gCalPath.c_str());
+}
+    
 void Timetable::reset() {
     eventList.clear();
     customList.clear();

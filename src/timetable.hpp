@@ -65,6 +65,7 @@ class Timetable {
         void save(std::string filePath = "0x8C");
         void restore(std::string dpath);
         void restore();
+        void clear();
         std::string toCSVString();
         void printToCSV();
         void exportToFile(std::string fileName);
