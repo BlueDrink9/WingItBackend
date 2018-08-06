@@ -38,6 +38,7 @@ diffResult(){
 }
 
 main(){
+    mkdir -p ${SCRIPTDIR}/TestOutputs
     for file in ${SCRIPTDIR}/TestInputs/*; do
         filebase=$(basename $(basename $file) .txt)
         printf "Testfile: ${filebase}\n"
