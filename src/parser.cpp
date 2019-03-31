@@ -26,8 +26,9 @@ std::string latRgx = ".(?=-(3[5-9]|4[0-6])\\.\\d*(?=,))";
 std::string lonRgx = ".(-(3[5-9]|4[0-6])\\.\\d*(?=,)),(?=1(6[6-9]|7[0-8]))";
 std::string roomCodeStart = "target[^>]*>";
 // \/ has to be escaped, will show up like "\\/" in debugger. Look like \/ in real data.
-std::string slashPair = "\\\\/";
+std::string slashPair = "\\\\*/";
 std::string idString = "id\":\"";
+std::string daykeyString = "day\":";
 std::string infoString = "info\\\":\"";
 std::string infoEnd =  "/div>\"";
 
@@ -219,7 +220,7 @@ void Parser::getWeekStart() {
         int slashIndex = indexOf(dateSlice, slashPair);
         std::string dayIntString = dateSlice.substr(0, slashIndex);
         // Cut the slash off.
-        dateSlice = dateSlice.substr(slashIndex+2, std::string::npos);
+        dateSlice = dateSlice.substr(indexOf(dateSlice, "/") + 1, std::string::npos);
 
         std::string monthIntString;
         // May be in 3 letter format (eg mar, Nov), or may be in two number form.
@@ -234,7 +235,7 @@ void Parser::getWeekStart() {
 
         slashIndex = indexOf(dateSlice, slashPair);
         // npos goes to end position
-        dateSlice = dateSlice.substr(slashIndex+2, std::string::npos);
+        dateSlice = dateSlice.substr(indexOf(dateSlice, "/") + 1, std::string::npos);
         std::string yearIntString = dateSlice.substr(0, indexOf(dateSlice, " to"));
         // This requires input to be of format dd+mm+yy
         this->weekStart = std::stoi(dayIntString + monthIntString + yearIntString);
@@ -385,7 +386,7 @@ std::vector<TimetableEvent> Parser::parse(std::string data) {
         ttEvent.setId(json.substr(startIndex, endIndex - startIndex));
 
         // Set each day
-        startIndex = indexOf(json, ":", endIndex) + 1;
+        startIndex = int(indexOf(json,daykeyString, endIndex) + idString.length());
         endIndex = indexOf(json, ",", startIndex);
         std::string dayStr = json.substr(startIndex, endIndex - startIndex);
         ttEvent.setDay(stoi(dayStr, nullptr));
